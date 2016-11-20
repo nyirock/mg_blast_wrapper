@@ -80,6 +80,10 @@ def main(argv):
     iterations = 1
     alen_increment = 5.0
     iden_increment = 0.0
+    blast_db_Dir = ""
+    results_Dir = ""
+    input_files_Dir = ""
+    ref_out_0 = ""
     
              
     try:                                
@@ -217,6 +221,54 @@ def main(argv):
         print "Iterations: ", iterations, '\n'
         print "Alignment Length Increment: ", alen_increment, '\n'
         print "Sequence identity Increment: ", iden_increment, '\n'
+
+    #Initializing directories
+    blast_db_Dir = name+"/blast_db"
+    if os.path.exists(blast_db_Dir):
+        shutil.rmtree(blast_db_Dir)
+    try:
+        os.mkdir(blast_db_Dir)
+    except OSError:
+        print "ERROR: Cannot create project directory: " + blast_db_Dir
+        raise
+
+    results_Dir = name+"/results"
+    if os.path.exists(results_Dir):
+        shutil.rmtree(results_Dir)
+    try:
+        os.mkdir(results_Dir)
+    except OSError:
+        print "ERROR: Cannot create project directory: " + results_Dir
+        raise
+
+    input_files_Dir = name+"/input_files"
+    if os.path.exists(input_files_Dir):
+        shutil.rmtree(input_files_Dir)
+    try:
+        os.mkdir(input_files_Dir)
+    except OSError:
+        print "ERROR: Cannot create project directory: " + input_files_Dir
+        raise
+
+# Writing raw reference files into a specific input filename
+    input_ref_records = {}
+    for reference in ref_lst:
+        ref_records_ind = parse_contigs_ind(reference)
+        #ref_records = dict(ref_records_ind)
+        input_ref_records.update(ref_records_ind)
+        ref_records_ind.close()
+        #input_ref_records.update(ref_records)
+        
+    ref_out_0 = input_files_Dir+"/reference0.fna"
+    with open(ref_out_0, "w") as handle:
+        SeqIO.write(input_ref_records.values(), handle, "fasta")
+            #NO NEED TO CLOSE with statement will automatically close the file
+        
+
+
+#    blast_db_Dir = ""
+#    results_Dir = ""
+#    input_files_Dir = ""
     
 #    parsed = SeqIO.parse(handle, "fasta")
 #

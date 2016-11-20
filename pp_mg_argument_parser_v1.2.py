@@ -80,6 +80,9 @@ def main(argv):
     iterations = 1
     alen_increment = 5.0
     iden_increment = 0.0
+    blast_db_Dir = ""
+    results_Dir = ""
+    input_files_Dir = ""
     
              
     try:                                
@@ -217,6 +220,38 @@ def main(argv):
         print "Iterations: ", iterations, '\n'
         print "Alignment Length Increment: ", alen_increment, '\n'
         print "Sequence identity Increment: ", iden_increment, '\n'
+
+    #Initializing directories
+    blast_db_Dir = name+"/blast_db/"
+    if os.path.exists(blast_db_Dir):
+        shutil.rmtree(blast_db_Dir)
+    try:
+        os.mkdir(blast_db_Dir)
+    except OSError:
+        print "ERROR: Cannot create project directory: " + blast_db_Dir
+        raise
+
+    results_Dir = name+"/results/"
+    if os.path.exists(results_Dir):
+        shutil.rmtree(results_Dir)
+    try:
+        os.mkdir(results_Dir)
+    except OSError:
+        print "ERROR: Cannot create project directory: " + results_Dir
+        raise
+
+    input_files_Dir = name+"/input_files/"
+    if os.path.exists(input_files_Dir):
+        shutil.rmtree(input_files_Dir)
+    try:
+        os.mkdir(input_files_Dir)
+    except OSError:
+        print "ERROR: Cannot create project directory: " + input_files_Dir
+        raise
+
+#    blast_db_Dir = ""
+#    results_Dir = ""
+#    input_files_Dir = ""
     
 #    parsed = SeqIO.parse(handle, "fasta")
 #
