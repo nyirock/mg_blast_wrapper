@@ -32,7 +32,7 @@ def retrive_sequence(contig_lst, rec_dic):
     #record_dict = rec_dic
     #handle.close()
     for contig in contig_lst:
-        contig_seqs.append(rec_dic[contig].seq.tostring())
+        contig_seqs.append(str(rec_dic[contig].seq))#fixing BiopythonDeprecationWarning
     return contig_seqs
 
 
@@ -155,8 +155,8 @@ def main(argv):
                 print "\nERROR: Please enter numerical value as -e parameter (using default: 1e-5)"
                 usage()
                 sys.exit(1)
-                
-            print "E value", e_val
+            if debugging:
+                print "E value", e_val
             
         elif opt in ("-a", "--alignment_length"):
             try:
@@ -165,7 +165,8 @@ def main(argv):
                 print "\nERROR: Please enter an numerical value as -alen parameter (using default: 50.0)"
                 usage()
                 sys.exit(1)
-            print "Alignment length", alen           
+            if debugging:
+                print "Alignment length", alen           
             
         elif opt in ("-i", "--identity"):
             try:
@@ -174,7 +175,8 @@ def main(argv):
                 print "\nERROR: Please enter an numerical value as -iden parameter (using default: 95.0)"
                 usage()
                 sys.exit(1)
-            print "Alignment length", iden    
+            if debugging:
+                print "Alignment length", iden    
             
         elif opt in ("--iterations"):
             try:
@@ -182,8 +184,8 @@ def main(argv):
             except:
                 
                 print "\nWARNING: Please enter integer value as --iterations parameter (using default: 1)"
-
-            print "Iterations: ", iterations  
+            if debugging:
+                print "Iterations: ", iterations  
             
         elif opt in ("--alen_increment"):
             
@@ -191,8 +193,8 @@ def main(argv):
                 alen_increment = float(arg)
             except:
                 print "\nWARNING: Please enter numerical value as --alen_increment parameter (using default: )", alen_increment
-
-            print "Alignment length increment: ", alen_increment 
+            if debugging:
+                print "Alignment length increment: ", alen_increment 
  
         elif opt in ("--iden_increment"):
             
@@ -200,8 +202,8 @@ def main(argv):
                 iden_increment = float(arg)
             except:
                 print "\nWARNING: Please enter numerical value as --iden_increment parameter (using default: )", iden_increment
-
-            print "Alignment length increment: ", iden_increment 
+            if debugging:
+                print "Alignment length increment: ", iden_increment 
             
     for ref_file in [x for x in ref_lst if x]:
         try:
