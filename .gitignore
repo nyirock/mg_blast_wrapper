@@ -1,4 +1,6 @@
 output
 output/*
+iteration*
+iteration*/*
 .ipynb_checkpoints
 .ipynb_checkpoints/*
