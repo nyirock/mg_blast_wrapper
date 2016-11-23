@@ -2,5 +2,7 @@ output
 output/*
 iteration*
 iteration*/*
+coverage
+coverage/*
 .ipynb_checkpoints
 .ipynb_checkpoints/*
