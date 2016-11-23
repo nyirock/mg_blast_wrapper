@@ -2,15 +2,32 @@
 
 import getopt
 import sys
-from Bio import  SeqIO
+from Bio import SeqIO
 import time
 import os
 import shutil
 import pandas
+from Bio.SeqRecord import SeqRecord
+from Bio.Seq import Seq
 
 __author__ = "Andriy Sheremet"
 
 #Helper functions definitions
+
+def genome_shredder(input_dct, shear_val):
+    shredded = {}
+    
+    for key, value in input_dct.items():
+        #print input_dct[i].seq
+        #print i
+        dic_name = key
+        rec_name = value.name
+        for j in range(0, len(str(value.seq)), int(shear_val)):
+#            print j
+            record = str(value.seq)[0+j:int(shear_val)+j]
+            shredded[dic_name+"_"+str(j)] = SeqRecord(Seq(record),rec_name+"_"+str(j),'','')
+            #record = SeqRecord(input_ref_records[i].seq[0+i:int(shear_val)+i],input_ref_records[i].name+"_%i"%i,"","")
+    return shredded
 
 
 def parse_contigs_ind(f_name):
@@ -61,6 +78,26 @@ def unique_scaffold_topEval(dataframe):
     df = pandas.DataFrame([[getattr(i,j) for j in variables] for i in rows], columns = variables)
     return df
     
+def unique_scaffold_topBits(dataframe):
+#returns pandas series object
+    variables = list(dataframe.columns.values)
+    scaffolds=dict()
+    rows=list()
+
+    for row in dataframe.itertuples():
+
+        #if row[1]=='Ga0073928_10002560':
+        if row[1] not in scaffolds:
+            scaffolds[row[1]]=row
+        else:
+            if row[12]>scaffolds[row[1]][12]:
+                scaffolds[row[1]]=row
+    rows=scaffolds.values()
+    #variables=['quid', 'suid', 'iden', 'alen', 'mism', 'gapo', 'qsta', 'qend', 'ssta', 'send', 'eval', 'bits']
+    df = pandas.DataFrame([[getattr(i,j) for j in variables] for i in rows], columns = variables)
+    return df
+    
+    
 def close_ind_lst(ind_lst):
     """
     Closes index objects supplied in input parameter list
@@ -97,11 +134,13 @@ def main(argv):
     continue_from_previous = False #poorly supported, just keeping the directories
     skip_blasting = False
     debugging = False
+    sheared = False
+    shear_val = None
     
     
              
     try:                                
-        opts, args = getopt.getopt(argv, "r:m:n:e:a:i:f:h", ["reference=", "metagenome=", "name=", "e_value=", "alignment_length=", "identity=","format=", "iterations=", "alen_increment=", "iden_increment=","continue_from_previous","skip_blasting","debugging", "help"])
+        opts, args = getopt.getopt(argv, "r:m:n:e:a:i:s:f:h", ["reference=", "metagenome=", "name=", "e_value=", "alignment_length=", "identity=","shear=","format=", "iterations=", "alen_increment=", "iden_increment=","continue_from_previous","skip_blasting","debugging", "help"])
     except getopt.GetoptError:          
         usage()                         
         sys.exit(2)                     
@@ -112,10 +151,7 @@ def main(argv):
 #        elif opt in ("--recover_after_failure"):
 #            recover_after_failure = True
 #            print "Recover after failure:", recover_after_failure  
-        elif opt in ("--skip_blasting"):
-            skip_blasting = True
-            if debugging:
-                print "Blasting step omitted; Using previous blast output."
+
         elif opt in ("--continue_from_previous"):
             continue_from_previous = True
             if debugging:
@@ -155,7 +191,7 @@ def main(argv):
             try:
                 e_val = float(arg)
             except:
-                print "\nERROR: Please enter numerical value as -e parameter (using default: 1e-5)"
+                print "\nERROR: Please enter numerical value as -e parameter (default: 1e-5)"
                 usage()
                 sys.exit(1)
             if debugging:
@@ -172,7 +208,7 @@ def main(argv):
             try:
                 alen = float(arg.split("%")[0])
             except:
-                print "\nERROR: Please enter an numerical value as -alen parameter (using default: 50.0)"
+                print "\nERROR: Please enter a numerical value as -a parameter (default: 50.0)"
                 usage()
                 sys.exit(1)
             if debugging:
@@ -182,12 +218,21 @@ def main(argv):
             try:
                 iden = float(arg)
             except:
-                print "\nERROR: Please enter an numerical value as -iden parameter (using default: 95.0)"
+                print "\nERROR: Please enter a numerical value as -i parameter (default: 95.0)"
                 usage()
                 sys.exit(1)
             if debugging:
                 print "Alignment length", iden    
-            
+        elif opt in ("-s", "--shear"):
+            sheared = True
+            try:
+                shear_val = int(arg)
+            except:
+                print "\nERROR: Please enter an integer value as -s parameter"
+                usage()
+                sys.exit(1)
+            if debugging:
+                print "Alignment length", iden 
         elif opt in ("--iterations"):
             try:
                 iterations = int(arg)
@@ -214,6 +259,10 @@ def main(argv):
                 print "\nWARNING: Please enter numerical value as --iden_increment parameter (using default: )", iden_increment
             if debugging:
                 print "Alignment length increment: ", iden_increment 
+        elif opt in ("--skip_blasting"):
+            skip_blasting = True
+            if debugging:
+                print "Blasting step omitted; Using previous blast output."
             
     for ref_file in [x for x in ref_lst if x]:
         try:
@@ -224,6 +273,7 @@ def main(argv):
             print "\nERROR: Reference File(s) ["+ref_file+"] doesn't exist"
             usage()
             sys.exit(1)
+
             
     for mg_file in [x for x in mg_lst if x]:
         try:
@@ -313,9 +363,14 @@ def main(argv):
         #input_ref_records.update(ref_records)
         
     ref_out_0 = input_files_Dir+"/reference0.fna"
-    with open(ref_out_0, "w") as handle:
-        SeqIO.write(input_ref_records.values(), handle, "fasta")
+    if (sheared & bool(shear_val)):
+        with open(ref_out_0, "w") as handle:
+            SeqIO.write(genome_shredder(input_ref_records, shear_val).values(), handle, "fasta")
+
             #NO NEED TO CLOSE with statement will automatically close the file
+    else:
+        with open(ref_out_0, "w") as handle:
+            SeqIO.write(input_ref_records.values(), handle, "fasta")
 
 # Making BLAST databases
     #output fname from before used as input for blast database creation
@@ -356,6 +411,15 @@ def main(argv):
 #! Remember to close index objects after they are no longer needed
 #! Use helper function close_ind_lst()
     all_records = []
+    all_input_recs = parse_contigs_ind(ref_out_0)
+    
+#    _ = 0
+#    for key, value in all_input_recs.items():
+#        _ +=1
+#        if _ < 20:
+#            print key, len(value)
+    
+    
     print "\nIndexing metagenome file(s):"
     for i in range(len(mg_lst)):
         start = time.time()
@@ -365,13 +429,16 @@ def main(argv):
 # Transforming data
     for i in range(len(mg_lst)):
     #cutoff_contigs[dataframe]=evalue_filter(cutoff_contigs[dataframe])
-        recruited_mg[i]=unique_scaffold_topEval(recruited_mg[i])
+        recruited_mg[i]=unique_scaffold_topBits(recruited_mg[i])
         contig_list = recruited_mg[i]['quid'].tolist()
         recruited_mg[i]['Seq_nt']=retrive_sequence(contig_list, all_records[i])
         recruited_mg[i]['Seq_size']=recruited_mg[i]['Seq_nt'].apply(lambda x: len(x))
-        recruited_mg[i]['Coverage']=recruited_mg[i]['alen'].apply(lambda x: 100.0*float(x))/recruited_mg[i]['Seq_size']
+        recruited_mg[i]['Ref_size']=recruited_mg[i]['suid'].apply(lambda x: len(all_input_recs[str(x)]))
+        #recruited_mg[i]['Coverage']=recruited_mg[i]['alen'].apply(lambda x: 100.0*float(x))/min(recruited_mg[i]['Seq_size'].apply(lambda y: y),recruited_mg[i]['Ref_size'].apply(lambda z: z))
+        #df.loc[:, ['B0', 'B1', 'B2']].min(axis=1)
+        recruited_mg[i]['Coverage']=recruited_mg[i]['alen'].apply(lambda x: 100.0*float(x))/recruited_mg[i].loc[:,["Seq_size", "Ref_size"]].min(axis=1)
         recruited_mg[i]['Metric']=recruited_mg[i]['Coverage']*recruited_mg[i]['iden']/100.0
-        recruited_mg[i] = recruited_mg[i][['quid', 'suid', 'iden', 'alen','Coverage','Metric', 'mism', 'gapo', 'qsta', 'qend', 'ssta', 'send', 'eval', 'bits','Seq_size', 'Seq_nt']]
+        recruited_mg[i] = recruited_mg[i][['quid', 'suid', 'iden', 'alen','Coverage','Metric', 'mism', 'gapo', 'qsta', 'qend', 'ssta', 'send', 'eval', 'bits','Ref_size','Seq_size','Seq_nt']]
    
 # Here would go statistics functions and producing plots
 #
@@ -427,6 +494,7 @@ def main(argv):
                 SeqIO.write(records, output_handle, "fasta")
             print str(len(ids))+" sequences written to "+outfile2
     close_ind_lst(all_records)
+    close_ind_lst([all_input_recs])
     #all_records[i].close()# keep open if multiple iterations
 
 #recruited_mg_1 = pandas.read_csv(out_name1 ,sep="\t", header=None)
