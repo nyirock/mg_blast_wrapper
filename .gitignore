@@ -6,3 +6,9 @@ coverage
 coverage/*
 .ipynb_checkpoints
 .ipynb_checkpoints/*
+cycle
+cycle/*
+cyclic*
+cyclic*/*
+cycle1
+cycle1/*

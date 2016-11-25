@@ -307,6 +307,8 @@ def main(argv):
     print "\nProject Name: ", name,'\n'
     print "Project Directory: ", os.path.abspath(name),'\n'
     print "Reference File(s): ", ref_lst,'\n'
+    if sheared:
+        print "Shear Reference File(s):", str(shear_val)+"bp",'\n'
     print "Metagenome File(s): ", mg_lst,'\n'
     print "E Value: ", e_val, "\n"
     if alen_percent:
@@ -468,9 +470,14 @@ def main(argv):
         alen_str = "_alen_"+str(alen)+"bp"
 
     if iterations > 1:
-        prefix=name+"/results/"+name.split("/")[0]+"_iter_e_"+str(e_val)+iden_str+alen_str+"_recruited_mg_"
+        prefix=name+"/results/"+name.split("/")[0]+"_iter_e_"+str(e_val)+iden_str+alen_str
     else:
-        prefix=name+"/results/"+name.split("/")[0]+"_e_"+str(e_val)+iden_str+alen_str+"_recruited_mg_"
+        prefix=name+"/results/"+name.split("/")[0]+"_e_"+str(e_val)+iden_str+alen_str
+        
+    if sheared:
+        prefix = prefix+'_sheared_'+str(shear_val)+"bp"
+        
+    prefix = prefix + "_recruited_mg_"
     
     print "\nWriting files:"
     for i in range(len(mg_lst)):
