@@ -2,7 +2,7 @@
 dir_name="cyclic"
 chunk_size=100
 increment=50
-iterations=5
+iterations=20
 rm -rf $dir_name
 mkdir $dir_name
 location=$dir_name"/it_1"
