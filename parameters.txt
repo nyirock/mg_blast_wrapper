@@ -1,10 +1,10 @@
-dir_name=output
-chunk_size=100
-increment=50
+dir_name=noShear
+#chunk_size=100
+#increment=50
 iterations=1
 format=csv,fasta
 alen="100"
-metagenome=pp_metagenome3_assembled.fasta
+metagenome=IMG\ Data/76969.assembled.fna,IMG\ Data/76969.unassembled_illumina.fna
 reference=all_AP_WPS-2_bacterium.fna
 
 
