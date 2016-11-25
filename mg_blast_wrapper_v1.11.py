@@ -3,13 +3,17 @@
 import getopt
 import sys
 from Bio import SeqIO
-import time
+from Bio.SeqUtils import GC
+import time# import time, gmtime, strftime
 import os
 import shutil
 import pandas
 from Bio.SeqRecord import SeqRecord
 from Bio.Seq import Seq
 import csv
+from datetime import datetime
+import numpy as np
+from scipy import stats
 
 __author__ = "Andriy Sheremet"
 
@@ -442,7 +446,11 @@ def main(argv):
         #df.loc[:, ['B0', 'B1', 'B2']].min(axis=1)
         recruited_mg[i]['Coverage']=recruited_mg[i]['alen'].apply(lambda x: 100.0*float(x))/recruited_mg[i].loc[:,["Seq_size", "Ref_size"]].min(axis=1)
         recruited_mg[i]['Metric']=recruited_mg[i]['Coverage']*recruited_mg[i]['iden']/100.0
-        recruited_mg[i] = recruited_mg[i][['quid', 'suid', 'iden', 'alen','Coverage','Metric', 'mism', 'gapo', 'qsta', 'qend', 'ssta', 'send', 'eval', 'bits','Ref_size','Seq_size','Seq_nt']]
+        try:
+            recruited_mg[i]['Seq_GC']=recruited_mg[i]['Seq_nt'].apply(lambda x: GC(x))
+        except:
+            recruited_mg[i]['Seq_GC']=recruited_mg[i]['Seq_nt'].apply(lambda x: None)
+        recruited_mg[i] = recruited_mg[i][['quid', 'suid', 'iden', 'alen','Coverage','Metric', 'mism', 'gapo', 'qsta', 'qend', 'ssta', 'send', 'eval', 'bits','Ref_size','Seq_size','Seq_GC','Seq_nt']]
    
 # Here would go statistics functions and producing plots
 #
@@ -480,16 +488,35 @@ def main(argv):
         prefix = prefix+'_sheared_'+str(shear_val)+"bp"
         
     prefix = prefix + "_recruited_mg_"
+
+#initializing log file data
+
+    logfile=name.split("/")[0]+"/results.log"
+    try:
+        run = int(name.split("/")[-1].split("_")[-1])# using "_" less depends on the wrapper script
+    except:
+        if name.split("/")[-1].split("_")[-1]==name:
+            run = 0
+        else:
+            print "Warning: Run identifier could not be written in: "+logfile
+            #sys.exit(1)
+            run = None
+    alen_header = "Min alen"
+    if alen_bp:
+        alen_header = alen_header+" (bp)"
+    if alen_percent:
+        alen_header = alen_header+" (%)"
+        
+    shear_header = "Reference Shear (bp)"
+    shear_log_value = "None"
+    if sheared:
+        shear_log_value = str(shear_val)+"bp"
+        
     
     print "\nWriting files:"
+
     for i in range(len(mg_lst)):
         records= []
-        
-    #     try:
-    #         os.remove(outfile1)     
-    #     except OSError:
-    #         pass
-        
         if "csv" in fmt_lst:
             outfile1 = prefix+str(i)+".csv"
             recruited_mg[i].to_csv(outfile1, sep='\t')
@@ -503,21 +530,61 @@ def main(argv):
             with open(outfile2, "w") as output_handle:
                 SeqIO.write(records, output_handle, "fasta")
             print str(len(ids))+" sequences written to "+outfile2
+            
+#Writing logfile
+        
+        try:
+            time_str = time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime())
+        except:
+            print "Warning: Time identifier could not be written in: "+logfile
+        metagenome = mg_lst[i]
+        #contig info
+        sizes_lst = np.array(recruited_mg[i]['Seq_size'].tolist())
+        sizes_avg = np.mean(sizes_lst)
+        sizes_avg_std= np.std(sizes_lst)
+        sizes_avg_sem = stats.sem(sizes_lst, axis=0)
+        
+        alen_lst = np.array(recruited_mg[i]['alen'].tolist())
+        alen_avg = np.mean(alen_lst)
+        alen_avg_std = np.std(alen_lst)
+        alen_avg_sem = stats.sem(alen_lst, axis=0)
+        
+        iden_lst = np.array(recruited_mg[i]['iden'].tolist())
+        iden_avg = np.mean(iden_lst)
+        iden_avg_std = np.std(iden_lst)
+        iden_avg_sem = stats.sem(iden_lst, axis=0)
+
+        gc_lst = np.array(recruited_mg[i]['Seq_GC'].tolist())
+        gc_avg = np.mean(gc_lst)
+        gc_avg_std = np.std(gc_lst)
+        gc_avg_sem = stats.sem(gc_lst, axis=0)
+
+
+        
+        log_header = ['Run','Project Name','Created', 'Reference(s)','Metagenome', 'No. Contigs', alen_header, "Min iden (%)", shear_header, "Mean Contig Size (bp)","STD Contig Size", "SEM Contig Size", "Mean Contig alen (bp)","STD Contig alen", "SEM Contig alen", "Mean Contig iden (bp)","STD Contig iden", "SEM Contig iden", "Mean Contig GC (%)","STD Contig GC","SEM Contig GC"]
+        log_row = [run,name.split("/")[0],time_str, ";".join(ref_lst), metagenome, len(ids), alen, iden, shear_log_value, sizes_avg,sizes_avg_std, sizes_avg_sem, alen_avg,alen_avg_std, alen_avg_sem, iden_avg,iden_avg_std, iden_avg_sem, gc_avg,gc_avg_std, gc_avg_sem]
+            
+        if os.path.isfile(logfile):#file exists - appending
+            with open(logfile, "a") as log_handle:
+                log_writer = csv.writer(log_handle, delimiter='\t')
+                log_writer.writerow(log_row)
+        else:#no file exists - writing
+            with open(logfile,"w") as log_handle:
+                log_writer = csv.writer(log_handle, delimiter='\t')
+                log_writer.writerow(log_header)
+                log_writer.writerow(log_row)
+            
+            
     close_ind_lst(all_records)
     close_ind_lst([all_input_recs])
     
     
-#Writing logfile
-    logfile=name.split("/")[0]+"/results.log"
-    if os.path.isfile(logfile):
-        with open(logfile, "a") as log_handle:
-            log_writer = csv.writer(log_handle, delimiter='\t')
-            log_writer.writerow([3,4])
-    else:
-        with open(logfile,"w") as log_handle:
-            log_writer = csv.writer(log_handle, delimiter='\t')
-            log_writer.writerow(['hehe', 'haha'])
-            log_writer.writerow([1,2])
+
+    #run = 0
+
+        
+
+
         
 
     #all_records[i].close()# keep open if multiple iterations

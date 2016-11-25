@@ -1,13 +1,15 @@
 #!/bin/bash
-dir_name="cyclic"
+dir_name="mg1_shear100_2000"
 chunk_size=100
 increment=50
-iterations=3
+iterations=40
 rm -rf $dir_name
 mkdir $dir_name
-location=$dir_name"/it_1"
+#location=$dir_name"/it_1"
 format="csv,fasta"
 alen="100"
+metagenome=IMG\ Data/76969.assembled.fna,IMG\ Data/76969.unassembled_illumina.fna
+reference="all_AP_WPS-2_bacterium.fna"
 #echo $location
 #python mg_blast_wrapper_v1.8_cyclic.py     -r all_AP_WPS-2_bacterium.fna -m pp_metagenome3_assembled.fasta -n $location -shear $chunk_size
 
@@ -15,11 +17,11 @@ if [ "$iterations" -gt "1" ]
 then
     for (( c=0; c<=iterations; c++ ))
     do
-       location=$dir_name"/it_"$c
+       location=$dir_name"/run_"$c
        #echo $location
        chunk_size=$(($chunk_size+$increment*$c))
        #echo $chunk_size
-       python mg_blast_wrapper_v1.11.py    -r all_AP_WPS-2_bacterium.fna -m pp_metagenome3_assembled.fasta -n $location --shear $chunk_size -f $format -a $alen
+       python mg_blast_wrapper_v1.11.py    -r $reference -m "$metagenome" -n $location --shear $chunk_size -f $format -a $alen
     done
 else
     location=$dir_name
