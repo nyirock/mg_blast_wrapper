@@ -1,0 +1,11 @@
+dir_name=output
+chunk_size=100
+increment=50
+iterations=1
+format=csv,fasta
+alen="100"
+metagenome=pp_metagenome3_assembled.fasta
+reference=all_AP_WPS-2_bacterium.fna
+
+
+

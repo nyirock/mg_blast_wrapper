@@ -1,0 +1,11 @@
+dir_name=mg1_shear100_2000
+chunk_size=100
+increment=50
+iterations=40
+format=csv,fasta
+alen="100"
+metagenome=IMG\ Data/76969.assembled.fna,IMG\ Data/76969.unassembled_illumina.fna
+reference=all_AP_WPS-2_bacterium.fna
+
+
+
