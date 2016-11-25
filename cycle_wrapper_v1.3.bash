@@ -4,14 +4,16 @@
 while test $# != 0
 do
 case "$1" in
-    -p|--parameters) filename="$2" ; shift ;;
+    -f|--filename) filename="$2" ; shift ;;
+    -p|--parameters) parameters="$2" ; shift ;;
 esac
 shift # past argument or value
 done
 
+#echo $filename
+#echo $parameters
 
-
-source $filename
+source $parameters
 
 #echo $filename
 
@@ -27,9 +29,9 @@ then
        #echo $location
        chunk_size=$(($chunk_size+$increment*$c))
        #echo $chunk_size
-       python mg_blast_wrapper_v1.12.py    -r $reference -m "$metagenome" -n $location --shear $chunk_size -f $format -a $alen
+       python $filename    -r $reference -m "$metagenome" -n $location --shear $chunk_size -f $format -a $alen
     done
 else
     location=$dir_name
-    python mg_blast_wrapper_v1.12.py    -r $reference -m "$metagenome" -n $location --shear $chunk_size -f $format -a $alen
+    python $filename    -r $reference -m "$metagenome" -n $location --shear $chunk_size -f $format -a $alen
 fi
