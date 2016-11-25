@@ -515,9 +515,9 @@ def main(argv):
         alen_header = alen_header+" (%)"
         
     shear_header = "Reference Shear (bp)"
-    shear_log_value = "None"
+    shear_log_value = 0
     if sheared:
-        shear_log_value = str(shear_val)+"bp"
+        shear_log_value = str(shear_val)
         
     
     print "\nWriting files:"
