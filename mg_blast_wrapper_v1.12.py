@@ -423,6 +423,7 @@ def main(argv):
     
     ##calculating GC of the reference
     ref_gc_lst = np.array([GC(x.seq) for x in all_input_recs.values()])
+    ref_cnt = ref_gc_lst.size
     ref_gc_avg = np.mean(ref_gc_lst)
     ref_gc_avg_std = np.std(ref_gc_lst)
     ref_gc_avg_sem = stats.sem(ref_gc_lst, axis=0)
@@ -567,8 +568,8 @@ def main(argv):
 
 
         
-        log_header = ['Run','Project Name','Created', 'Reference(s)','Metagenome', 'No. Contigs', alen_header, "Min iden (%)", shear_header, "Mean Contig Size (bp)","STD Contig Size", "SEM Contig Size", "Mean Contig alen (bp)","STD Contig alen", "SEM Contig alen", "Mean Contig iden (bp)","STD Contig iden", "SEM Contig iden", "Mean Contig GC (%)","STD Contig GC","SEM Contig GC","Mean Reference GC (%)","STD Reference GC","SEM Reference GC"]
-        log_row = [run,name.split("/")[0],time_str, ";".join(ref_lst), metagenome, len(ids), alen, iden, shear_log_value, sizes_avg,sizes_avg_std, sizes_avg_sem, alen_avg,alen_avg_std, alen_avg_sem, iden_avg,iden_avg_std, iden_avg_sem, gc_avg,gc_avg_std, gc_avg_sem,ref_gc_avg,ref_gc_avg_std, ref_gc_avg_sem]
+        log_header = ['Run','Project Name','Created', 'Reference(s)','Metagenome', 'No. Contigs','No. References', alen_header, "Min iden (%)", shear_header, "Mean Contig Size (bp)","STD Contig Size", "SEM Contig Size", "Mean Contig alen (bp)","STD Contig alen", "SEM Contig alen", "Mean Contig iden (bp)","STD Contig iden", "SEM Contig iden", "Mean Contig GC (%)","STD Contig GC","SEM Contig GC","Mean Reference GC (%)","STD Reference GC","SEM Reference GC"]
+        log_row = [run,name.split("/")[0],time_str, ";".join(ref_lst), metagenome, len(ids),ref_cnt, alen, iden, shear_log_value, sizes_avg,sizes_avg_std, sizes_avg_sem, alen_avg,alen_avg_std, alen_avg_sem, iden_avg,iden_avg_std, iden_avg_sem, gc_avg,gc_avg_std, gc_avg_sem,ref_gc_avg,ref_gc_avg_std, ref_gc_avg_sem]
             
         if os.path.isfile(logfile):#file exists - appending
             with open(logfile, "a") as log_handle:
