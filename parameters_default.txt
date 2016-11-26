@@ -98,12 +98,12 @@ format=fasta,csv
 ### specified otions.
 ### Uncomment following line to enable debuging messages:
 
-debugging=true
+#debugging=true
 
 ### To prevent rewriting the directory tree uncomment the following
 ### line:
 
-continue_from_previous=true
+#continue_from_previous=true
 
 
 ### Attention: If using skip_blasting option, uncomment the previous line 
@@ -112,7 +112,7 @@ continue_from_previous=true
 ### To skip the blasting step, which could be time consuming,
 ### uncomment the following line:
 
-skip_blasting=true
+#skip_blasting=true
 
 
 
@@ -164,7 +164,7 @@ skip_blasting=true
 ### If using lst parameters, comment out previous iterative section.
 ### To enable operation with lst parameters in this section, uncomment the following line:
 
-iterations=true
+#iterations=true
 
 ### Individual sets of parameters uncomment and modify, if needed, ONE of the following lines:
 
@@ -176,4 +176,4 @@ iterations=true
 #alen_lst="70% 80% 90% 100%"
 
 #iden_lst="80 90 95 99 100"
-shear_lst="0 100 200 300 400 500"
+#shear_lst="0 100 200 300 400 500"
