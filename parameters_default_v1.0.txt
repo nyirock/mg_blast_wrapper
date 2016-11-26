@@ -1,0 +1,70 @@
+###*********************************************************
+###*           This is a parameters file                   *
+###*           for cycle_wrapper_v1.x.bash scripts         *
+###*                                                       *
+###*           Comment/uncomment specific line/sections    *
+###*           by adding/removing the # symbol(s)          *
+###*           in the begining of each line/block          *
+###*                                                       *
+###*           Do not use spaces before and after          *
+###*           an equal sign (=). Do not use quotes ("").  *
+###*                                                       *
+###*           If the path contain space(s), escape them   *
+###*           by using a perceding "\" symbol             *
+###*           path=folder\ with\ spaces/                  *
+###*********************************************************
+
+
+#
+#       dir_name: The top of the directory tree under which the blast databases
+# reference input files and results are stored
+#
+# Do not add a slash at the end of the directory path. Value entered as dir_name is
+# also used as a project name. Default dir_name value is "output". Change its value to store 
+# the project under a different name. Using the same dir_name value for consecutive runs
+# will result in deletion of the previous data and overwriting the directory tree.
+# least PidFile.
+#
+
+
+dir_name=output
+
+#       metagenome and reference parameters. Specify paths to metagenome(s), reference(s) files in the following 
+# section. Multiple files are supplied as comma separated values, with no spaces between them.
+# If the path contais space(s) insert \ symbol before each space. Multiple reference files will be combined
+# into a single database, while each of metagenome files will be processed separately.
+#
+
+#metagenome=IMG\ Data/76969.assembled.fna,IMG\ Data/76969.unassembled_illumina.fna
+reference=all_AP_WPS-2_bacterium.fna
+
+metagenome=pp_metagenome3_assembled.fasta
+
+
+#       The following section contains stringency parameters for standalone BLAST procedure.
+#
+# alen parameter specifies a minimum pairwise alignment length required between the metagenomic contig and 
+# the reference sequence. Two options that are supported: using % and absolute values for overlap.
+# alen=50% will reject the alignments whose overlap is less than 50% length of min(contig,reference)
+# alen=50 will reject the alignments whose overlap is less than 50 bp
+# Default: alen=50%
+#
+
+alen=100
+#alen=50%
+
+# iden parameter specifies a percentage of minimum pairwise sequence identity between a contig and a reference
+# Default: iden=95
+# Uncomment the following line to activate adn/or change this parameter
+
+#iden=95
+
+
+#chunk_size=100
+#increment=50
+iterations=1
+format=csv,fasta
+
+
+
+
