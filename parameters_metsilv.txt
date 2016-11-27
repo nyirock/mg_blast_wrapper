@@ -31,10 +31,11 @@
 ### Example of the path containing spaces:
 #metagenome='IMG\ Data/76969.assembled.fna,IMG\ Data/76969.unassembled_illumina.fna'
 reference='2501025493.fna'
-metagenome='IMG_Data1/76969.assembled.fna,IMG_Data1/76969.unassembled_illumina.fna,IMG_Data2/80116.assembled.fna,IMG_Data2/80116.unassembled_illumina.fna,pp_metagenome3_assembled.fasta'
+#metagenome='IMG_Data1/76969.assembled.fna,IMG_Data1/76969.unassembled_illumina.fna,IMG_Data2/80116.assembled.fna,IMG_Data2/80116.unassembled_illumina.fna,pp_metagenome3_assembled.fasta'
 
 #metagenome=pp_metagenome3_assembled.fasta,IMG\ Data/76969.assembled.fna,IMG\ Data/76969.unassembled_illumina.fna
 
+metagenome=IMG_Data2/80116.unassembled_illumina.fna
 
 ####
 ####       dir_name: The top of the directory tree under which the blast databases
@@ -47,7 +48,7 @@ metagenome='IMG_Data1/76969.assembled.fna,IMG_Data1/76969.unassembled_illumina.f
 #### least PidFile:
 
 
-dir_name='metsilv_vs_pp_shear'
+dir_name='metsilv_vs_pp3_shear_2'
 
 #dir_name=Shear1000
 

@@ -455,8 +455,9 @@ def main(argv):
         print "\t"+mg_lst[i]+" Indexed in : "+str(time.time()-start)+" seconds."
 
 # Transforming data
-    print "\nParsing metagenome file(s):"
+    print "\nParsing recruited contigs:"
     for i in range(len(mg_lst)):
+        start = time.time()
     #cutoff_contigs[dataframe]=evalue_filter(cutoff_contigs[dataframe])
         recruited_mg[i]=unique_scaffold_topBits(recruited_mg[i])
         contig_list = recruited_mg[i]['quid'].tolist()
@@ -472,6 +473,7 @@ def main(argv):
         except:
             recruited_mg[i]['Seq_GC']=recruited_mg[i]['Seq_nt'].apply(lambda x: None)
         recruited_mg[i] = recruited_mg[i][['quid', 'suid', 'iden', 'alen','Coverage','Metric', 'mism', 'gapo', 'qsta', 'qend', 'ssta', 'send', 'eval', 'bits','Ref_size','Seq_size','Seq_GC','Seq_nt']]
+        print "\tContigs from "+mg_lst[i]+" parsed in : "+str(time.time()-start)+" seconds."
    
 # Here would go statistics functions and producing plots
 #
@@ -561,38 +563,47 @@ def main(argv):
         metagenome = mg_lst[i]
         #contig info
         sizes_lst = np.array(recruited_mg[i]['Seq_size'].tolist())
-        sizes_avg = np.mean(sizes_lst)
-        sizes_avg_std= np.std(sizes_lst)
+
         if(len(sizes_lst) > 0):
+            sizes_avg = np.mean(sizes_lst)
+            sizes_avg_std= np.std(sizes_lst)
             sizes_avg_sem = stats.sem(sizes_lst, axis=0)
         else:
+            sizes_avg = 0
+            sizes_avg_std= 0
             sizes_avg_sem=0
         #sizes_avg_sem = stats.sem(sizes_lst, axis=0)
         
         alen_lst = np.array(recruited_mg[i]['alen'].tolist())
-        alen_avg = np.mean(alen_lst)
-        alen_avg_std = np.std(alen_lst)
         if(len(alen_lst) > 0):
+            alen_avg = np.mean(alen_lst)
+            alen_avg_std = np.std(alen_lst)
             alen_avg_sem = stats.sem(alen_lst, axis=0)
         else:
+            alen_avg = 0
+            alen_avg_std = 0
             alen_avg_sem=0
         #alen_avg_sem = stats.sem(alen_lst, axis=0)
         
         iden_lst = np.array(recruited_mg[i]['iden'].tolist())
-        iden_avg = np.mean(iden_lst)
-        iden_avg_std = np.std(iden_lst)
         if(len(iden_lst) > 0):
+            iden_avg = np.mean(iden_lst)
+            iden_avg_std = np.std(iden_lst)
             iden_avg_sem = stats.sem(iden_lst, axis=0)
         else:
+            iden_avg = 0
+            iden_avg_std = 0
             iden_avg_sem=0
         #iden_avg_sem = stats.sem(iden_lst, axis=0)
 
         gc_lst = np.array(recruited_mg[i]['Seq_GC'].tolist())
-        gc_avg = np.mean(gc_lst)
-        gc_avg_std = np.std(gc_lst)
         if(len(gc_lst) > 0):
+            gc_avg = np.mean(gc_lst)
+            gc_avg_std = np.std(gc_lst)
             gc_avg_sem = stats.sem(gc_lst, axis=0)
         else:
+            gc_avg = 0
+            gc_avg_std = 0
             gc_avg_sem=0
 
 
