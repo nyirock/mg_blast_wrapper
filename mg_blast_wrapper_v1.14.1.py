@@ -461,18 +461,22 @@ def main(argv):
     #cutoff_contigs[dataframe]=evalue_filter(cutoff_contigs[dataframe])
         recruited_mg[i]=unique_scaffold_topBits(recruited_mg[i])
         contig_list = recruited_mg[i]['quid'].tolist()
-        recruited_mg[i]['Seq_nt']=retrive_sequence(contig_list, all_records[i])
-        recruited_mg[i]['Seq_size']=recruited_mg[i]['Seq_nt'].apply(lambda x: len(x))
+        recruited_mg[i]['Contig_nt']=retrive_sequence(contig_list, all_records[i])
+        recruited_mg[i]['Contig_size']=recruited_mg[i]['Contig_nt'].apply(lambda x: len(x))
+        #recruited_mg[i]['Ref_nt']=recruited_mg[i]['suid'].apply(lambda x: all_input_recs[str(x)].seq)
         recruited_mg[i]['Ref_size']=recruited_mg[i]['suid'].apply(lambda x: len(all_input_recs[str(x)]))
-        #recruited_mg[i]['Coverage']=recruited_mg[i]['alen'].apply(lambda x: 100.0*float(x))/min(recruited_mg[i]['Seq_size'].apply(lambda y: y),recruited_mg[i]['Ref_size'].apply(lambda z: z))
+        
+        recruited_mg[i]['Ref_GC']=recruited_mg[i]['suid'].apply(lambda x: GC(all_input_recs[str(x)].seq))
+        #recruited_mg[i]['Coverage']=recruited_mg[i]['alen'].apply(lambda x: 100.0*float(x))/min(recruited_mg[i]['Contig_size'].apply(lambda y: y),recruited_mg[i]['Ref_size'].apply(lambda z: z))
         #df.loc[:, ['B0', 'B1', 'B2']].min(axis=1)
-        recruited_mg[i]['Coverage']=recruited_mg[i]['alen'].apply(lambda x: 100.0*float(x))/recruited_mg[i].loc[:,["Seq_size", "Ref_size"]].min(axis=1)
+        recruited_mg[i]['Coverage']=recruited_mg[i]['alen'].apply(lambda x: 100.0*float(x))/recruited_mg[i].loc[:,["Contig_size", "Ref_size"]].min(axis=1)
         recruited_mg[i]['Metric']=recruited_mg[i]['Coverage']*recruited_mg[i]['iden']/100.0
         try:
-            recruited_mg[i]['Seq_GC']=recruited_mg[i]['Seq_nt'].apply(lambda x: GC(x))
+            recruited_mg[i]['Contig_GC']=recruited_mg[i]['Contig_nt'].apply(lambda x: GC(x))
         except:
-            recruited_mg[i]['Seq_GC']=recruited_mg[i]['Seq_nt'].apply(lambda x: None)
-        recruited_mg[i] = recruited_mg[i][['quid', 'suid', 'iden', 'alen','Coverage','Metric', 'mism', 'gapo', 'qsta', 'qend', 'ssta', 'send', 'eval', 'bits','Ref_size','Seq_size','Seq_GC','Seq_nt']]
+            recruited_mg[i]['Contig_GC']=recruited_mg[i]['Contig_nt'].apply(lambda x: None)
+        #recruited_mg[i] = recruited_mg[i][['quid', 'suid', 'iden', 'alen','Coverage','Metric', 'mism', 'gapo', 'qsta', 'qend', 'ssta', 'send', 'eval', 'bits','Ref_size','Ref_GC','Ref_nt','Contig_size','Contig_GC','Contig_nt']]
+        recruited_mg[i] = recruited_mg[i][['quid', 'suid', 'iden', 'alen','Coverage','Metric', 'mism', 'gapo', 'qsta', 'qend', 'ssta', 'send', 'eval', 'bits','Ref_size','Ref_GC','Contig_size','Contig_GC','Contig_nt']]
         print "\tContigs from "+mg_lst[i]+" parsed in : "+str(time.time()-start)+" seconds."
    
 # Here would go statistics functions and producing plots
@@ -562,7 +566,7 @@ def main(argv):
             print "Warning: Time identifier could not be written in: "+logfile
         metagenome = mg_lst[i]
         #contig info
-        sizes_lst = np.array(recruited_mg[i]['Seq_size'].tolist())
+        sizes_lst = np.array(recruited_mg[i]['Contig_size'].tolist())
 
         if(len(sizes_lst) > 0):
             sizes_avg = np.mean(sizes_lst)
@@ -605,7 +609,7 @@ def main(argv):
             iden_avg_sem=0
         #iden_avg_sem = stats.sem(iden_lst, axis=0)
 
-        gc_lst = np.array(recruited_mg[i]['Seq_GC'].tolist())
+        gc_lst = np.array(recruited_mg[i]['Contig_GC'].tolist())
         if(len(gc_lst) > 0):
             gc_avg = np.mean(gc_lst)
             gc_avg_std = np.std(gc_lst)
@@ -621,7 +625,7 @@ def main(argv):
 
         
         #log_header = ['Run','Project Name','Created', 'Reference(s)','Metagenome', 'No. Contigs','No. References', alen_header, "Min iden (%)", shear_header, "Mean Contig Size (bp)","STD Contig Size", "SEM Contig Size", "Mean Contig alen (bp)","STD Contig alen", "SEM Contig alen", "Mean Contig iden (bp)","STD Contig iden", "SEM Contig iden", "Mean Contig GC (%)","STD Contig GC","SEM Contig GC","Mean Reference GC (%)","STD Reference GC","SEM Reference GC"]
-        log_header = ['Run','Project Name','Created', 'Reference(s)', shear_header,'No. Ref. Sequences','Metagenome','No. Metagenome Contigs' , alen_header, "Min iden (%)",'No. Recruited Contigs', "Mean Contig Size (bp)","STD Contig Size", "SEM Contig Size", "Mean Contig alen (bp)","STD Contig alen", "SEM Contig alen", "Mean Contig iden (bp)","STD Contig iden", "SEM Contig iden", "Mean Contig GC (%)","STD Contig GC","SEM Contig GC","Mean Reference GC (%)","STD Reference GC","SEM Reference GC"]
+        log_header = ['Run','Project Name','Created', 'Reference(s)', shear_header,'No. Ref. Sequences','Metagenome','No. Metagenome Contigs' , alen_header, "Min iden (%)",'No. Recruited Contigs', "Mean Rec. Contig Size (bp)","STD Rec. Contig Size", "SEM Rec. Contig Size", "Mean alen (bp)","STD alen", "SEM alen", "Mean Rec. Contig iden (bp)","STD Rec. Contig iden", "SEM Rec. Contig iden", "Mean Rec. Contigs GC (%)","STD Rec. Contig GC","SEM Rec. Contig GC","Mean Total Reference(s) GC (%)","STD Total Reference(s) GC","SEM Total Reference(s) GC"]
         #log_row = [run,name.split("/")[0],time_str, ";".join(ref_lst), metagenome, len(ids),ref_cnt, alen, iden, shear_log_value, sizes_avg,sizes_avg_std, sizes_avg_sem, alen_avg,alen_avg_std, alen_avg_sem, iden_avg,iden_avg_std, iden_avg_sem, gc_avg,gc_avg_std, gc_avg_sem,ref_gc_avg,ref_gc_avg_std, ref_gc_avg_sem]
         log_row = [run,name.split("/")[0],time_str, ";".join(ref_lst), shear_log_value,ref_cnt, metagenome,len(all_records[i]) , alen, iden,len(ids), sizes_avg,sizes_avg_std, sizes_avg_sem, alen_avg,alen_avg_std, alen_avg_sem, iden_avg,iden_avg_std, iden_avg_sem, gc_avg,gc_avg_std, gc_avg_sem,ref_gc_avg,ref_gc_avg_std, ref_gc_avg_sem]    
         if os.path.isfile(logfile):#file exists - appending
