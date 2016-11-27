@@ -72,6 +72,7 @@ then
 fi
 
 req_opt=' -m '$metagenome' -r '$reference
+#echo $metagenome
 
 if [ "$debugging" = "true" ] 
 then
@@ -95,9 +96,8 @@ fi
 if [ -z "$dir_name" ]
 then
     echo "Project name not specified in parameters file. Using default"
-    #exit
-else
     dir_name="output"
+    #exit    
 fi
 
 #eval 'find '"$dir_name"' -type f -name ".*" -delete'

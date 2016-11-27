@@ -23,15 +23,17 @@
 #### the parameters are optional.
 #### Specify paths to metagenome(s), reference(s) files in the following 
 #### section. Multiple files are supplied as comma separated values, with no spaces between them.
-#### Attention: Names should be comma separated with spaces are allowed between them.
 #### If the path contais space(s) insert \ symbol before each space. Multiple reference files will be combined
 #### into a single database, while each of metagenome files will be processed separately:
 
+#metagenome='pp_metagenome3_assembled.fasta'
 
-#metagenome=IMG\ Data/76969.assembled.fna,IMG\ Data/76969.unassembled_illumina.fna
-reference=all_AP_WPS-2_bacterium.fna
+### Example of the path containing spaces:
+#metagenome='IMG\ Data/76969.assembled.fna,IMG\ Data/76969.unassembled_illumina.fna'
+reference='2501025493.fna'
+metagenome='IMG_Data1/76969.assembled.fna,IMG_Data1/76969.unassembled_illumina.fna,IMG_Data2/80116.assembled.fna,IMG_Data2/80116.unassembled_illumina.fna,pp_metagenome3_assembled.fasta'
 
-metagenome=pp_metagenome3_assembled.fasta
+#metagenome=pp_metagenome3_assembled.fasta,IMG\ Data/76969.assembled.fna,IMG\ Data/76969.unassembled_illumina.fna
 
 
 ####
@@ -45,7 +47,7 @@ metagenome=pp_metagenome3_assembled.fasta
 #### least PidFile:
 
 
-dir_name=output
+dir_name='metsilv_vs_pp_shear'
 
 #dir_name=Shear1000
 
@@ -62,14 +64,14 @@ dir_name=output
 ### Default: alen=50%:
 
 
-#alen=100
+alen=100
 #alen=50%
 
 ### iden parameter specifies a percentage of minimum pairwise sequence identity between a contig and a reference
 ### Default: iden=95
 ### Uncomment the following line to activate adn/or change this parameter:
 
-#iden=95
+iden=95
 
 ### E value parameter specifies a minimum E value asscociated with a recruited contig.
 ### Default: e_val=1e-5
@@ -81,7 +83,7 @@ dir_name=output
 ### uncomment and modify the following line to enable reference sequences 
 ### fragmentation to the size of the shear value in bp:
 
-shear=200
+#shear=200
 
 ###         Output parameters
 ### use format parameter to set output format of exported contigs
@@ -165,7 +167,7 @@ format=fasta,csv
 ### If using lst parameters, comment out previous iterative section.
 ### To enable operation with lst parameters in this section, uncomment the following line:
 
-#iterations=true
+iterations=true
 
 ### Individual sets of parameters uncomment and modify, if needed, ONE of the following lines:
 
@@ -177,4 +179,4 @@ format=fasta,csv
 #alen_lst="70% 80% 90% 100%"
 
 #iden_lst="80 90 95 99 100"
-#shear_lst="0 100 200 300 400 500"
+shear_lst="0 100 200 300 400 500 1000 2000"

@@ -422,11 +422,24 @@ def main(argv):
     all_input_recs = parse_contigs_ind(ref_out_0)
     
     ##calculating GC of the reference
-    ref_gc_lst = np.array([GC(x.seq) for x in all_input_recs.values()])
-    ref_cnt = ref_gc_lst.size
-    ref_gc_avg = np.mean(ref_gc_lst)
-    ref_gc_avg_std = np.std(ref_gc_lst)
-    ref_gc_avg_sem = stats.sem(ref_gc_lst, axis=0)
+    if (len(all_input_recs)>1):
+        ref_gc_lst = np.array([GC(x.seq) for x in all_input_recs.values()])
+        ref_cnt = ref_gc_lst.size
+        ref_gc_avg = np.mean(ref_gc_lst)
+        ref_gc_avg_std = np.std(ref_gc_lst)
+        if(len(ref_gc_lst) > 0):
+            ref_gc_avg_sem = stats.sem(ref_gc_lst, axis=0)
+        else:
+            ref_gc_avg_sem=0
+    else:
+        if (debugging):
+            print "Only one reference"
+        ref_gc_lst = np.array([GC(x.seq) for x in all_input_recs.values()])
+        ref_cnt = ref_gc_lst.size
+        ref_gc_avg = np.mean(ref_gc_lst)
+        ref_gc_avg_std=0
+        ref_gc_avg_sem=0
+    #ref_gc_avg_sem = stats.sem(ref_gc_lst, axis=0)
     
 #    _ = 0
 #    for key, value in all_input_recs.items():
@@ -498,7 +511,7 @@ def main(argv):
 
 #initializing log file data
 
-    logfile=name.split("/")[0]+"/results.log"
+    logfile=name.split("/")[0]+"/results_log.csv"
     try:
         run = int(name.split("/")[-1].split("_")[-1])# using "_" less depends on the wrapper script
     except:
@@ -549,22 +562,37 @@ def main(argv):
         sizes_lst = np.array(recruited_mg[i]['Seq_size'].tolist())
         sizes_avg = np.mean(sizes_lst)
         sizes_avg_std= np.std(sizes_lst)
-        sizes_avg_sem = stats.sem(sizes_lst, axis=0)
+        if(len(sizes_lst) > 0):
+            sizes_avg_sem = stats.sem(sizes_lst, axis=0)
+        else:
+            sizes_avg_sem=0
+        #sizes_avg_sem = stats.sem(sizes_lst, axis=0)
         
         alen_lst = np.array(recruited_mg[i]['alen'].tolist())
         alen_avg = np.mean(alen_lst)
         alen_avg_std = np.std(alen_lst)
-        alen_avg_sem = stats.sem(alen_lst, axis=0)
+        if(len(alen_lst) > 0):
+            alen_avg_sem = stats.sem(alen_lst, axis=0)
+        else:
+            alen_avg_sem=0
+        #alen_avg_sem = stats.sem(alen_lst, axis=0)
         
         iden_lst = np.array(recruited_mg[i]['iden'].tolist())
         iden_avg = np.mean(iden_lst)
         iden_avg_std = np.std(iden_lst)
-        iden_avg_sem = stats.sem(iden_lst, axis=0)
+        if(len(iden_lst) > 0):
+            iden_avg_sem = stats.sem(iden_lst, axis=0)
+        else:
+            iden_avg_sem=0
+        #iden_avg_sem = stats.sem(iden_lst, axis=0)
 
         gc_lst = np.array(recruited_mg[i]['Seq_GC'].tolist())
         gc_avg = np.mean(gc_lst)
         gc_avg_std = np.std(gc_lst)
-        gc_avg_sem = stats.sem(gc_lst, axis=0)
+        if(len(gc_lst) > 0):
+            gc_avg_sem = stats.sem(gc_lst, axis=0)
+        else:
+            gc_avg_sem=0
 
 
         
