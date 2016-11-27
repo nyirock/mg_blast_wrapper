@@ -38,6 +38,20 @@ reference='MetcysSC2.fna'
 metagenome=pp_metagenome3_assembled.fasta
 #metagenome=IMG_Data2/80116.unassembled_illumina.fna
 
+####
+####       dir_name: The top of the directory tree under which the blast databases
+#### reference input files and results are stored
+####
+#### Do not add a slash at the end of the directory path. Value entered as dir_name is
+#### also used as a project name. Default dir_name value is "output". Change its value to store 
+#### the project under a different name. Using the same dir_name value for consecutive runs
+#### will result in deletion of the previous data and overwriting the directory tree.
+#### least PidFile:
+
+
+#dir_name='3_gen_3_metagen'
+
+#dir_name=Shear1000
 
 
 
@@ -53,7 +67,7 @@ metagenome=pp_metagenome3_assembled.fasta
 #### will result in deletion of the previous data and overwriting the directory tree.
 #### least PidFile:
 
-dir_name='output'
+
 #dir_name='3_gen_3_metagen'
 
 #dir_name=Shear1000

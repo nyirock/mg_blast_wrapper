@@ -65,11 +65,11 @@ then
     exit
 fi
 
-if [[ ( ("$iterations" != "true" && -z "$ref_lst") ||  -n "$reference" ) && ( ( "$iterations" == "true" && -n "$ref_lst") ||  -z "$reference" ) ]] 
+if [[ ( ( "$iterations" != "true" && -z "$ref_lst" ) ||  -n "$reference" ) && ( ( "$iterations" == "true" && -n "$ref_lst") ||  -z "$reference" ) ]] 
 then
-    echo $iterations
-    echo $ref_lst
-    echo $reference
+#    echo $iterations
+#    echo $ref_lst
+#    echo $reference
     echo "Reference file name(s) not specified in parameters file."
     exit
 
@@ -78,7 +78,7 @@ fi
 #checking if cycling over reference option is enabled
 if [[ -n "$ref_lst" && "$iterations" == "true"  ]]
 then
-    echo "triggered ref_lst option"
+    #echo "triggered ref_lst option"
     req_opt=' -m '$metagenome
 elif [ -n "$reference" ]
 then
