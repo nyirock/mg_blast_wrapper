@@ -30,12 +30,13 @@
 
 ### Example of the path containing spaces:
 #metagenome='IMG\ Data/76969.assembled.fna,IMG\ Data/76969.unassembled_illumina.fna'
-reference='2501025493.fna'
-#metagenome='IMG_Data1/76969.assembled.fna,IMG_Data1/76969.unassembled_illumina.fna,IMG_Data2/80116.assembled.fna,IMG_Data2/80116.unassembled_illumina.fna,pp_metagenome3_assembled.fasta'
+#reference='all_AP_WPS-2_bacterium.fna'
+
+metagenome='IMG_Data1/76969.assembled.fna,IMG_Data1/76969.unassembled_illumina.fna,IMG_Data2/80116.assembled.fna,IMG_Data2/80116.unassembled_illumina.fna,pp_metagenome3_assembled.fasta'
 
 #metagenome=pp_metagenome3_assembled.fasta,IMG\ Data/76969.assembled.fna,IMG\ Data/76969.unassembled_illumina.fna
 
-metagenome=IMG_Data2/80116.unassembled_illumina.fna
+#metagenome=IMG_Data2/80116.unassembled_illumina.fna
 
 ####
 ####       dir_name: The top of the directory tree under which the blast databases
@@ -48,7 +49,7 @@ metagenome=IMG_Data2/80116.unassembled_illumina.fna
 #### least PidFile:
 
 
-dir_name='metsilv_vs_pp3_shear_2'
+dir_name='3_gen_3_metagen'
 
 #dir_name=Shear1000
 
@@ -77,14 +78,14 @@ iden=95
 ### E value parameter specifies a minimum E value asscociated with a recruited contig.
 ### Default: e_val=1e-5
 
-#e_val=1e-5
+e_val=1e-20
 
 
 ###         Reference shearing parameters
 ### uncomment and modify the following line to enable reference sequences 
 ### fragmentation to the size of the shear value in bp:
 
-#shear=200
+shear=1000
 
 ###         Output parameters
 ### use format parameter to set output format of exported contigs
@@ -180,4 +181,6 @@ iterations=true
 #alen_lst="70% 80% 90% 100%"
 
 #iden_lst="80 90 95 99 100"
-shear_lst="0 100 200 300 400 500 1000 2000"
+#shear_lst="0 100 200 300 400 500 1000 2000"
+
+ref_lst="metsilv_BL2.fna metfer_AR4T.fna all_AP_WPS-2_bacterium.fna"

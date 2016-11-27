@@ -65,18 +65,20 @@ then
     exit
 fi
 
-if [ -z "$reference" ]
+if [[ ( ("$iterations" != "true" && -z "$ref_lst") ||  -n "$reference" ) && ( ( "$iterations" == "true" && -n "$ref_lst") ||  -z "$reference" ) ]] 
 then
-    if  [[ "$iterations" != "true" && -z "$ref_lst" ]]
-    then
-        echo "Reference file name(s) not specified in parameters file."
-        exit
-    fi
+    echo $iterations
+    echo $ref_lst
+    echo $reference
+    echo "Reference file name(s) not specified in parameters file."
+    exit
+
 fi
 
 #checking if cycling over reference option is enabled
 if [[ -n "$ref_lst" && "$iterations" == "true"  ]]
 then
+    echo "triggered ref_lst option"
     req_opt=' -m '$metagenome
 elif [ -n "$reference" ]
 then
@@ -276,7 +278,7 @@ elif [[ -n "$iden_lst" && "$iterations" == true ]]
         done
 
         
-elif [[   -n "e_val_lst" && "$iterations" == true  ]]
+elif [[   -n "$e_val_lst" && "$iterations" == true  ]]
     then
         c=0
         for e_val in $e_val_lst
@@ -293,8 +295,7 @@ elif [[   -n "e_val_lst" && "$iterations" == true  ]]
 #                exit
 #           fi
         done
-elif [[ -n "$ref_lst" && "$iterations" == "true"  ]]
-     
+elif [[ -n "$ref_lst" && "$iterations" == true  ]]     
     then
         c=0
         for ref in $ref_lst
@@ -302,7 +303,7 @@ elif [[ -n "$ref_lst" && "$iterations" == "true"  ]]
            location=$dir_name"/run_"$c
            #echo $location
            ref_opt=" -r "$ref
-           
+           #echo "elif clause triggered"
            #echo $chunk_size
            eval 'python '$filename' -n '$location' '$ref_opt' '$req_opt' '$alen_opt' '$iden_opt' '$e_val_opt' '$shear_opt' '$format_opt
            c=$(($c+1))
