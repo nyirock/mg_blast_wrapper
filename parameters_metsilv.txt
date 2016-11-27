@@ -108,7 +108,7 @@ format=fasta,csv
 ### To prevent rewriting the directory tree uncomment the following
 ### line:
 
-#continue_from_previous=true
+continue_from_previous=true
 
 
 ### Attention: If using skip_blasting option, uncomment the previous line 
@@ -117,7 +117,7 @@ format=fasta,csv
 ### To skip the blasting step, which could be time consuming,
 ### uncomment the following line:
 
-#skip_blasting=true
+skip_blasting=true
 
 
 

@@ -117,7 +117,7 @@ fi
 
 #eval 'find '"$dir_name"' -type f -name ".*" -delete'
 
-if [ -z "$continue_from_previous"]
+if [ -z "$continue_from_previous" ]
 then
     rm -rf $dir_name
 
