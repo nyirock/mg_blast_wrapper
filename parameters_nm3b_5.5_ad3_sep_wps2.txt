@@ -1,0 +1,195 @@
+###*********************************************************
+###*           This is a parameters file                   *
+###*           for cycle_wrapper_v1.x.bash scripts         *
+###*                                                       *
+###*           Comment/uncomment specific line/sections    *
+###*           by adding/removing the # symbol(s)          *
+###*           in the begining of each line/block          *
+###*                                                       *
+###*           Do not use spaces before and after          *
+###*           an equal sign (=). Do not use quotes ("").  *
+###*                                                       *
+###*           If the path contain space(s), escape them   *
+###*           by using a perceding "\" symbol             *
+###*           path=folder\ with\ spaces/                  *
+###*                                                       *
+###*           email:andriy.sheremet(et)ucalgary.ca        *
+###*********************************************************
+
+####
+####                REQUIRED PARAMETERS
+####
+####  For the script to run metagenome and reference parameters must be specified. The rest of 
+#### the parameters are optional.
+#### Specify paths to metagenome(s), reference(s) files in the following 
+#### section. Multiple files are supplied as comma separated values, with no spaces between them.
+#### If the path contais space(s) insert \ symbol before each space. Multiple reference files will be combined
+#### into a single database, while each of metagenome files will be processed separately:
+
+#metagenome='pp_metagenome3_assembled.fasta'
+
+### Example of the path containing spaces:
+#metagenome='IMG\ Data/76969.assembled.fna,IMG\ Data/76969.unassembled_illumina.fna'
+#reference='MetcysSC2.fna'
+
+#metagenome='IMG_Data1/76969.assembled.fna,IMG_Data1/76969.unassembled_illumina.fna,IMG_Data2/80116.assembled.fna,IMG_Data2/80116.unassembled_illumina.fna,pp_metagenome3_assembled.fasta'
+metagenome='IMG_Data1/76969.assembled.fna,IMG_Data1/76969.unassembled_illumina.fna,bb_at_qc.contigs.fna,unmapped.pe.fna'
+#metagenome=pp_metagenome3_assembled.fasta,IMG\ Data/76969.assembled.fna,IMG\ Data/76969.unassembled_illumina.fna
+#metagenome=pp_metagenome3_assembled.fasta
+#metagenome=IMG_Data2/80116.unassembled_illumina.fna
+
+
+
+
+####                OPTIONAL PARAMETERS
+
+####
+####       dir_name: The top of the directory tree under which the blast databases
+#### reference input files and results are stored
+####
+#### Do not add a slash at the end of the directory path. Value entered as dir_name is
+#### also used as a project name. Default dir_name value is "output". Change its value to store 
+#### the project under a different name. Using the same dir_name value for consecutive runs
+#### will result in deletion of the previous data and overwriting the directory tree.
+#### least PidFile:
+
+dir_name='5.5_nm3b_ad3_sep'
+#dir_name='3_gen_3_metagen'
+
+#dir_name=Shear1000
+
+
+####
+####       BLAST stringency parameters.
+#
+### alen parameter specifies a minimum pairwise alignment length required between the metagenomic contig and 
+### the reference sequence. Two options that are supported: using % and absolute values for overlap.
+### alen=50% will reject the alignments whose overlap is less than 50% length of min(contig,reference)
+### alen=50 will reject the alignments whose overlap is less than 50 bp
+### Default: alen=50%:
+
+
+alen=100
+#alen=50%
+
+### iden parameter specifies a percentage of minimum pairwise sequence identity between a contig and a reference
+### Default: iden=95
+### Uncomment the following line to activate adn/or change this parameter:
+
+iden=95
+
+### E value parameter specifies a minimum E value asscociated with a recruited contig.
+### Default: e_val=1e-5
+
+e_val=1e-20
+
+
+###         Reference shearing parameters
+### uncomment and modify the following line to enable reference sequences 
+### fragmentation to the size of the shear value in bp:
+
+shear=1000
+
+###         Output parameters
+### use format parameter to set output format of exported contigs
+### format=fasta will export recruited contigs as multiple fasta filename
+### format=csv will export recruited contigs as tab separated filename
+### that includes BLAST and sequences statistics
+### use format=fasta,csv to export to both formats
+### Default: format=fasta
+
+format=fasta,csv
+
+
+###             OPTIONAL FLAGS
+###         Uncomment line(s) in this seciton to activate 
+### specified otions.
+### Uncomment following line to enable debuging messages:
+
+#debugging=true
+
+### To prevent rewriting the directory tree uncomment the following
+### line:
+
+#continue_from_previous=true
+
+
+### Attention: If using skip_blasting option, uncomment the previous line 
+### (continue_from_previous=true)
+### to prevent directory tree overwriting
+### To skip the blasting step, which could be time consuming,
+### uncomment the following line:
+
+#skip_blasting=true
+
+
+
+###             ITERATIVE SETTINGS
+### Only total of three lines should be active in following
+### section per single run cycle.
+### Only one xxxx_increment variable should be set at a time
+### To enable parameter sweep set iteration variable to a positive
+### numerical value representing the number of runs:
+
+#iterations=5
+
+### If needed re-initialize run variables with the starting values 
+### for a parameter sweep:
+### Make sure initial parameter is initialized before enabling increment
+
+#alen=50%
+#alen=100
+#iden=95
+#e_val=1e-5
+#shear=500
+#format=fasta,csv
+
+
+###             INITIALIZING INCREMENT SETTINGS
+###
+### 
+### Attention: Only one of the following variables should be initialized
+### with an integer value at a time.
+### Uncomment a line you want to run increment on
+### to increase a respective parameter with each iteration
+### If alen_increment units should match the units for alen parameter
+
+### Type of alen_increment parameter chosen should correspond to the units of alen parameter
+#alen_increment=10
+#alen_increment=5%
+
+
+#iden_increment=1
+
+#shear_increment=10
+
+
+###         Iterative settings with lst parameters
+### 
+### Comment out this section if parameter sweep is not intended.
+### Iterations could be set up using lst parameters. Uncomment and change one
+### of the lines to perform a sweep on the parameter of interest.
+### If using lst parameters, comment out previous iterative section.
+### To enable operation with lst parameters in this section, uncomment the following line:
+
+iterations=true
+
+### Individual sets of parameters uncomment and modify, if needed, ONE of the following lines:
+
+
+#e_val_lst="1e-10 1e-20 1e-30 1e-40 1e-50"
+
+
+#alen_lst="70 80 90 100 150 180"
+#alen_lst="70% 80% 90% 100%"
+
+#iden_lst="80 90 95 99 100"
+#shear_lst="0 100 200 300 400 500 1000 2000"
+
+ref_lst="AD3.fna
+AP_WPS-2_bacterium1_JGI_MDM2-000215CP_H-17_contigs
+AP_WPS-2_bacterium2_JGI_MDM2-000215CP_B5_contigs
+AP_WPS-2_bacterium3_JGI_MDM2-000215CP_G15_contigs
+AP_WPS-2_bacterium4_JGI_MDM2-000215CP_C6_contigs
+AP_WPS-2_bacterium5_JGI_MDM2-000215CP_F4_contigs
+AP_WPS-2_bacterium6_JGI_MDM2-000215CP_I16_contigs"
